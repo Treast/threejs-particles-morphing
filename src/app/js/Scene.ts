@@ -53,6 +53,13 @@ class Scene {
       this.particleSystem.modelIndex = index;
       this.particleSystem.model = this.models[index];
     });
+    window.addEventListener('touchstart', () => {
+      console.log(this.particleSystem);
+      const index = (this.particleSystem.modelIndex + 1) % this.models.length;
+      console.log(index);
+      this.particleSystem.modelIndex = index;
+      this.particleSystem.model = this.models[index];
+    });
   }
 
   onResize() {
@@ -62,8 +69,13 @@ class Scene {
   }
 
   init() {
-    this.camera.position.set(0.5, 0.5, 0.5);
+    this.camera.position.set(0.7, 0.7, 0.7);
     this.camera.lookAt(0, 0, 0);
+    this.controls.enableRotate = false;
+    this.controls.autoRotate = true;
+    this.controls.enableZoom = false;
+    this.controls.enablePan = false;
+    this.controls.enableKeys = false;
     this.models = [
       {
         name: 'assets/Bunny.obj',
