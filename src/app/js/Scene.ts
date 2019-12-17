@@ -48,10 +48,10 @@ class Scene {
     window.addEventListener('resize', () => this.onResize());
     window.addEventListener('click', () => {
       console.log(this.particleSystem);
-      // const index = (this.particleSystem.modelIndex + 1) % this.models.length;
-      // console.log(index);
-      // this.particleSystem.modelIndex = index;
-      // this.particleSystem.model = this.models[index];
+      const index = (this.particleSystem.modelIndex + 1) % this.models.length;
+      console.log(index);
+      this.particleSystem.modelIndex = index;
+      this.particleSystem.model = this.models[index];
     });
   }
 
@@ -81,7 +81,7 @@ class Scene {
       geometry: null,
       material: null,
       mesh: null,
-      count: 2000,
+      count: 4000,
       model: null,
       modelIndex: 0,
     };
@@ -130,7 +130,7 @@ class Scene {
 
         const rootGeometry = new THREE.BufferGeometry().setFromPoints(vertices);
         model.vertices = GeometryUtils.randomPointsInBufferGeometry(rootGeometry, this.particleSystem.count);
-        model.vertices = vertices;
+        // model.vertices = vertices;
 
         if (!this.particleSystem.model) {
           this.particleSystem.model = model;
@@ -168,20 +168,20 @@ class Scene {
     requestAnimationFrame(() => this.render());
     this.renderer.render(this.scene, this.camera);
 
-    if (false && this.particleSystem.mesh) {
+    if (this.particleSystem.mesh) {
       // @ts-ignore
       const points = this.particleSystem.mesh.geometry.attributes.position.array;
       for (let i = 0; i < points.length; i += 3) {
-        const index = i % 3;
+        const index = i / 3;
         const modelVertex = this.particleSystem.model.vertices[index];
 
         if (!modelVertex) {
-          console.log(this.particleSystem.model);
+          console.log(i, this.particleSystem.model);
+        } else {
+          points[i] = this.lerp(points[i], modelVertex.x, 0.1);
+          points[i + 1] = this.lerp(points[i + 1], modelVertex.y, 0.1);
+          points[i + 2] = this.lerp(points[i + 2], modelVertex.z, 0.1);
         }
-
-        points[i] = this.lerp(points[i], modelVertex.x, 0.015);
-        points[i + 1] = this.lerp(points[i + 1], modelVertex.y, 0.015);
-        points[i + 2] = this.lerp(points[i + 2], modelVertex.z, 0.015);
       }
 
       // @ts-ignore
